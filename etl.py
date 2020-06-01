@@ -14,6 +14,10 @@ os.environ['AWS_SECRET_ACCESS_KEY']=config['AWS_SECRET_ACCESS_KEY']
 
 
 def create_spark_session():
+    """
+    Return a spark session by getting an existing or creating a new one
+    :return:
+    """
     spark = SparkSession \
         .builder \
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
@@ -22,6 +26,14 @@ def create_spark_session():
 
 
 def process_song_data(spark, input_data, output_data):
+    """
+    Process song data including artist data by extracting it from input S3 location, transform to dimensional tables
+    and write it back to output S3 location in parquet format
+    :param spark: Spark session object
+    :param input_data: S3 location for song data files
+    :param output_data: S3 location for writing extracted song and artist data
+    :return:
+    """
     # get filepath to song data file
     song_data = 
     
@@ -42,6 +54,15 @@ def process_song_data(spark, input_data, output_data):
 
 
 def process_log_data(spark, input_data, output_data):
+    """
+    Process event data files to extract user data, time data and building fact table data for songplays table
+    by extracting it from input S3 location, transform to dimensional tables and write it back to
+    output S3 location in parquet format
+    :param spark: Spark session object
+    :param input_data: S3 location for event data files
+    :param output_data: S3 location for writing extracted users, time and fact table songplays
+    :return:
+    """
     # get filepath to log data file
     log_data =
 
@@ -82,9 +103,13 @@ def process_log_data(spark, input_data, output_data):
 
 
 def main():
+    """
+    Orchestrate the ETL by calling functions to process song and log data
+    :return:
+    """
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
-    output_data = ""
+    output_data = "sparkify-output"
     
     process_song_data(spark, input_data, output_data)    
     process_log_data(spark, input_data, output_data)
